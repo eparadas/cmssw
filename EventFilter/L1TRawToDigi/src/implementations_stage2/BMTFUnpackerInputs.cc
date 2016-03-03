@@ -41,11 +41,15 @@ namespace l1t
 			LogDebug("L1T") << "BX override. Set firstBX = lastBX = 0";
 			
 			L1MuDTChambPhContainer *resPhi;
+			// std::cout << "Checking link: " << blockId << std::endl;
+			// std::cout << "Address before is: " << resPhi << std::endl;
 			L1MuDTChambThContainer *resThe;
 			resPhi = static_cast<BMTFCollections*>(coll)->getInMuonsPh();
 			resThe = static_cast<BMTFCollections*>(coll)->getInMuonsTh();
-
-			L1MuDTChambPhContainer::Phi_Container phi_data;
+			// std::cout << "Address after is: " << resPhi << std::endl;
+			L1MuDTChambPhContainer::Phi_Container phi_data = *(resPhi->getContainer()); 
+			
+			
 			L1MuDTChambThContainer::The_Container the_data;
 			
 			for(int ibx = firstBX; ibx <= lastBX; ibx++)
@@ -63,16 +67,16 @@ namespace l1t
 				
 				for (int iw = 0; iw < 4; iw++)
 				{
-					if ( ((inputWords[iw] & 0x3fffffff) == 0) || (inputWords[iw] == 0x505050bc) ) 
+					if ( ((inputWords[iw] & 0xfffffff) == 0) || (inputWords[iw] == 0x505050bc) ) 
 						continue;
 					else if ( (inputWords[iw] != 0x505050bc) && (inputWords[iw+2] == 0x505050bc) )
 						continue;
 						
 					
 					if ( ((inputWords[iw] >> 11) & 0x1) == 1 )
-						mbPhi[iw] = ( inputWords[iw] & 0x7FF ) - 2048;
+						mbPhi[iw] = (inputWords[iw] & 0x7FF ) - 2048;
 					else
-						mbPhi[iw] = inputWords[iw] & 0xFFF;
+						mbPhi[iw] = (inputWords[iw] & 0xFFF );
 						
 					if ( iw != 2)
 					{
@@ -80,17 +84,23 @@ namespace l1t
 							mbPhiB[iw] = ( (inputWords[iw] >> 12) & 0x1FF ) - 512;
 						else
 							mbPhiB[iw] = (inputWords[iw] >> 12) & 0x3FF;
+						mbQual[iw] = (inputWords[iw] >> 22) & 0xF;
+						mbRPC[iw] = (inputWords[iw] >> 26) & 0x1;
+						mbBxC[iw] = (inputWords[iw] >> 30) & 0x3;
 					}
-					
-					mbQual[iw] = (inputWords[iw] >> 22) & 0xF;
-					mbBxC[iw] = (inputWords[iw] >> 30) & 0x3;
-					
+					else	
+					{
+						mbQual[iw] = (inputWords[iw] >> 12) & 0xF;
+						mbRPC[iw] = (inputWords[iw] >> 16) & 0x1;
+						mbBxC[iw] = (inputWords[iw] >> 20) & 0x3;
+					}
+	
 					if (mbQual[iw] == 0)
 						continue;
-
-					mbRPC[iw] = (inputWords[iw] >> 26) & 0x1;
-					phi_data.push_back( L1MuDTChambPhDigi( ibx, wheel, sector, iw+1, mbPhi[iw], mbPhiB[iw], mbQual[iw], trTag, mbBxC[iw], mbRPC[iw] ) );
 					
+					// std::cout << iw+1 << "\tWord: " << std::hex << inputWords[iw] << std::dec << "\tLink: " << blockId/2 << "\tamc: " << block.amc().getAMCNumber() << "\twheel: " << wheel << "\tsector: " << sector << std::endl;
+					phi_data.push_back( L1MuDTChambPhDigi( ibx, wheel, sector, iw+1, mbPhi[iw], mbPhiB[iw], mbQual[iw], trTag, mbBxC[iw], mbRPC[iw] ) );
+					// std::cout << iw+1 << "\tAfter push: " << std::hex << inputWords[iw] << std::dec << "\tLink: " << blockId/2 << "\tamc: " << block.amc().getAMCNumber() << "\twheel: " << phi_data.back().whNum() << "\tsector: " << phi_data.back().scNum() << std::endl;
 				}//iw
 				int mbEta[3];//, mbEtaBxC;
 				for (int i = 0; i < 3; i++)
@@ -98,11 +108,17 @@ namespace l1t
 				
 				the_data.push_back(L1MuDTChambThDigi( ibx, wheel, sector, 3, mbEta) );
 				
-				resPhi->setContainer(phi_data);
-				resThe->setContainer(the_data);
+
+				// std::cout << "phi_data size: " << phi_data.size() << std::endl;
 
 			}//ibx
-			
+			// std::cout << "Final size: " << phi_data.size() << std::endl;
+			// std::cout << "Address before set is: " << resPhi << std::endl;
+			resPhi->setContainer(phi_data);
+			// std::cout << "Address after set is: " << resPhi << std::endl;
+			if (phi_data.size() != 0)
+				// std::cout << "\tAfter set: " << "\twheel: " << phi_data.back().whNum() << "\tsector: " << phi_data.back().scNum() << std::endl;
+			resThe->setContainer(the_data);
 			
 		return true;
 		}//unpack

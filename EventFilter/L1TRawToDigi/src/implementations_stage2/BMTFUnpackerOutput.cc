@@ -51,7 +51,8 @@ namespace l1t
 					muCand.setLink(blockId/2);	
 
 					LogDebug("L1T") << "Pt = " << muCand.hwPt() << " eta: " << muCand.hwEta() << " phi: " << muCand.hwPhi();
-					res->push_back(ibx, muCand);
+					if ( muCand.hwQual() != 0 )
+						res->push_back(ibx, muCand);
 					
 				}//for iw
 			}//for ibx
