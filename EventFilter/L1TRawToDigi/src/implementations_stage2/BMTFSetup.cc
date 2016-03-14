@@ -53,9 +53,9 @@ namespace l1t {
                if (fed == 1376 || fed == 1377 )
                {
 									
-									for(int iL = 0; iL <= 42; iL += 2)
+									for(int iL = 0; iL <= 70; iL += 2)
 									{
-										if ( iL == 12 || iL == 14 || ( iL > 26 && iL < 32) )
+										if ( iL == 12 || iL == 14 || ( iL > 26 && iL < 32) || iL == 60 || iL == 62 )
 											continue;
 										
 										res[iL] = inputMuons;
