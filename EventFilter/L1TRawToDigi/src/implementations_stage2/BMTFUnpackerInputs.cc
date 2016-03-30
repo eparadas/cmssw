@@ -61,9 +61,8 @@ namespace l1t
 			resThe = static_cast<BMTFCollections*>(coll)->getInMuonsTh();
 			//std::cout << "Address after is: " << resPhi << std::endl;
 			L1MuDTChambPhContainer::Phi_Container phi_data = *(resPhi->getContainer()); 
+			L1MuDTChambThContainer::The_Container the_data = *(resThe->getContainer());			
 			
-			
-			L1MuDTChambThContainer::The_Container the_data;
 			
 			for(int ibx = firstBX; ibx <= lastBX; ibx++)
 			{
@@ -112,12 +111,18 @@ namespace l1t
 				int mbEta[3][7];//, mbEtaBxC;
 				for (int i = 0; i < 3; i++)
 				{
+					bool zeroFlag(false);
+
 					for(int j=0; j<7; j++)
+					{
 						mbEta[i][j] = (inputWords[4] >> (i*7 + j)) & 0x1;
-				
-					the_data.push_back(L1MuDTChambThDigi( ibx, wheel, sector, i+1, mbEta[i]) );
-				}
-				
+						if ( mbEta[i][j]!=0 )
+							zeroFlag = true;
+					}
+					
+					if (zeroFlag)
+						the_data.push_back(L1MuDTChambThDigi( ibx, wheel, sector, i+1, mbEta[i]) );
+				}	
 
 				//std::cout << "phi_data size: " << phi_data.size() << std::endl;
 
