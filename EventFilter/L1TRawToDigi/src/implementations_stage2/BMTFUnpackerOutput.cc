@@ -29,12 +29,12 @@ namespace l1t
 			
 			LogDebug("L1T") << "nBX = " << nBX << " firstBX = " << firstBX << " lastBX = " << lastBX;
 			
-			int processor;
-			if (  block.amc().getAMCNumber()%2 != 0 )
+			int processor = block.amc().getBoardID() - 1;
+/*			if (  block.amc().getAMCNumber()%2 != 0 )
 				processor =  block.amc().getAMCNumber()/2;
 			else
 				processor = 6 + ( block.amc().getAMCNumber()/2 -1);
-			
+*/			
 
 			for(int ibx = firstBX; ibx <= lastBX; ibx++)
 			{

@@ -7,7 +7,7 @@ namespace l1t
 {
 	namespace stage2
 	{
-		void numWheelSectorTrTag(int& wheelNo, int& sectorNo, int& tagSegID, int linkNo, int amcNo)
+		void numWheelSectorTrTag(int& wheelNo, int& tagSegID, int linkNo, int amcNo)
 		{
 			if (linkNo >= 0 && linkNo < 6)
 				wheelNo = -2;
@@ -19,11 +19,6 @@ namespace l1t
 				wheelNo = 1;
 			else if ( (linkNo >= 28 && linkNo < 30) || (linkNo >= 32 && linkNo < 36))
 				wheelNo = 2;
-			
-			if ( amcNo%2 != 0 )
-				sectorNo = amcNo/2 ;
-			else
-				sectorNo = 6 + (amcNo/2 -1);
 			
 			if ( linkNo%2 == 0 )
 				tagSegID = 0;
@@ -68,8 +63,9 @@ namespace l1t
 					inputWords[iw] = payload[iw+(ibx+lastBX)*6];
 			
 				int wheel, sector, trTag;
-				numWheelSectorTrTag(wheel, sector, trTag, blockId/2, block.amc().getAMCNumber());
-				
+				numWheelSectorTrTag(wheel, trTag, blockId/2, block.amc().getAMCNumber());
+				sector = block.amc().getBoardID() - 1;
+
 				int mbPhi[4], mbPhiB[4], mbQual[4], mbBxC[4], mbRPC[4];
 				//mbPhiB[2] = 0;
 				
