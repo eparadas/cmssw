@@ -112,6 +112,9 @@ namespace l1t
 						etaHits[i][6-j] = (inputWords[4] >> (i*7 + j)) & 0x1;
 						if ( etaHits[i][6-j]!=0 )
 							zeroFlag[i] = true;
+						//etaHits[i][j] = (inputWords[4] >> (i*7 + j)) & 0x1;
+						//if ( etaHits[i][j]!=0 )
+							//zeroFlag[i] = true;
 					}
 				}
 				if ( trTag == 1 )
@@ -119,7 +122,7 @@ namespace l1t
 					for (int i = 0; i < 3; i++)
 					{
 						if (zeroFlag[i])
-							theData.push_back(L1MuDTChambThDigi( ibx, wheel, sector, i+1, etaHits[i]) );
+							theData.push_back(L1MuDTChambThDigi( ibx, wheel, sector, i+1, etaHits[i], linkAndQual_[blockId/2 - 1].hits[i]) );
 					}
 					/*bool toBeErased[3];
 
@@ -162,15 +165,13 @@ namespace l1t
 							thIt++;
 					}*/
 				}
-				/*else
+				else
 				{
-					int quals[7];
-					for (int i = 0; i < 7; i++)
-						quals[i] = 0;
-					for (int i = 0; i < 3; i++)
-						theData.push_back(L1MuDTChambThDigi( ibx, wheel, sector, i+1, quals, etaHits[i]) );					
-						
-				}*/
+					qualityHits temp;
+					temp.linkNo = blockId/2;
+					std::copy(&etaHits[0][0], &etaHits[0][0]+3*7,&temp.hits[0][0]);
+					linkAndQual_[blockId/2] = temp;	
+				}
 				//std::cout << std::endl << std::endl;
 
 				//std::cout << "phiData size: " << phiData.size() << std::endl;
