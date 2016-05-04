@@ -65,12 +65,13 @@ class setting
 		std::vector<std::string> tableTypes_;
 		std::vector<std::string> tableColumns_;
 		
-		std::string erSp_(std::string str, const std::string& delim);
+		void str2VecStr_(const std::string& aStr, const std::string& delim, std::vector<std::string>& aVec);
 };
 
 
 template <typename varType> std::vector<varType> setting::getVector(std::string delim)
 {
+	std::cout << "From getVector" << std::endl << "value is " << value_ << std::endl;
 	if ( type_.find("vector") == std::string::npos )
 		throw std::runtime_error("The registered type: " + type_ + " is not vector so you need to call the getValue method");
 
@@ -78,14 +79,15 @@ template <typename varType> std::vector<varType> setting::getVector(std::string 
 		delim = std::string(",");
 	
 	std::vector<std::string> vals;
-	if ( !parse ( std::string(erSp_(value_, delim)+delim).c_str(),
-	(
-		  (  (*(boost::spirit::classic::anychar_p - delim.c_str() )) [boost::spirit::classic::push_back_a ( vals ) ] % delim.c_str() )
-	), boost::spirit::classic::nothing_p ).full )
-	{  	
-		throw std::runtime_error ("Wrong value format: " + value_);
-	}
-	vals.erase(vals.end()-1);
+	str2VecStr_(value_, delim, vals);
+	// if ( !parse ( value_.c_str(),
+	// (
+	// 	  (  (*(boost::spirit::classic::anychar_p - delim.c_str() )) [boost::spirit::classic::push_back_a ( vals ) ] % delim.c_str() )
+	// ), boost::spirit::classic::nothing_p ).full )
+	// {  	
+	// 	throw std::runtime_error ("Wrong value format: " + value_);
+	// }
+	//vals.erase(vals.end()-1);
 
 	std::vector<varType> newVals;
 	for(auto it=vals.begin(); it!=vals.end(); it++)
@@ -97,6 +99,7 @@ template <typename varType> std::vector<varType> setting::getVector(std::string 
 
 template <class varType> varType setting::getValue()
 {
+	std::cout << "From getValue" << std::endl;
 	if ( type_.find("vector") != std::string::npos )
 		throw std::runtime_error("The registered type: " + type_ + " is vector so you need to call the getVector method");
 	
@@ -106,6 +109,7 @@ template <class varType> varType setting::getValue()
 
 template <class varType> varType tableRow::getRowValue(const std::string& col)
 {
+	std::cout << "From getRowValue" << std::endl;
 	bool found(false);
 	int ct;
 	for (unsigned int i = 0; i < columns_.size(); i++)
