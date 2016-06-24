@@ -22,13 +22,14 @@ namespace l1t {
             {
                PackerMap res;
 
-/*               if (fed == 1360) {
-                  // Use board id 1 for packing
-                  res[{1, 1}] = {
-                     PackerFactory::get()->make("stage2::MuonPacker")
-                  };
+               if (fed == 1376 || fed == 1377) {
+                  
+                  for (int i=1; i<=6; i++)
+                     res[{1376, i}] = {PackerFactory::get()->make("stage2::BMTFPackerOutput")};
+                  for (int i=7; i<=12; i++)
+                     res[{1376, i}] = {PackerFactory::get()->make("stage2::BMTFPackerOutput")};
                }
-*/
+
                return res;
             };
 
