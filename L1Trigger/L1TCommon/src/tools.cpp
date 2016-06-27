@@ -11,7 +11,7 @@ void str2VecStr_(const std::string& aStr, const std::string& delim, std::vector<
                 throw std::runtime_error ("Wrong value format: " + aStr);
         }
 
-        for(auto it = aVec.begin(); it != aVec.end(); it++)
+        for(auto it = aVec.begin(); it != aVec.end(); ++it)
         {
                 while (*(it->begin()) == ' ')
                         it->erase(it->begin());

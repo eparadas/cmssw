@@ -24,16 +24,18 @@ class tableRow
 		tableRow(const std::vector<std::string>& row) { row_ = row;} ;
 		void setTableId(const std::string& id) { tableId_ = id; };
 		void setRowTypes(const std::vector<std::string>& types) { types_ = types; };
-		void setRowColumns(const std::vector<std::string>& columns) { columns_ = columns; };
+		void setRowColumns(const std::vector<std::string>& columns);
 		~tableRow() {};
 		std::vector<std::string> getRow () { return row_; };
 		std::string getRowAsStr();
+		std::vector<std::string> getColumnNames() {return columns_;};
 		template <class varType> varType getRowValue(const std::string& col);
 	private:
 		std::string tableId_;
 		std::vector<std::string> row_;
 		std::vector<std::string> types_;
 		std::vector<std::string> columns_;
+		std::map<std::string,int> colDict_;
 
 };
 
@@ -45,7 +47,7 @@ class setting
 		setting(const std::string& type, const std::string& id, const std::string& value, const std::string& procRole, const std::string& delim = "");
 		setting(const std::string& id, const std::string& columns, const std::string& types,  const std::vector<std::string>& rows, const std::string& procRole, const std::string& delim);
 		void setProcRole(const std::string& procRole) { procRole_ = procRole; };
-		void setValue(const std::string& value);// {value_ = value; };
+		void setValue(const std::string& value);
 		void setId(const std::string& id) { id_ = id; } ;
 		void addTableRow(const std::string& row);
 		void resetTableRows() { tableRows_.clear();};
@@ -100,21 +102,25 @@ template <class varType> varType setting::getValue()
 template <class varType> varType tableRow::getRowValue(const std::string& col)
 {
 	
-	bool found(false);
-	int ct;
-	for (unsigned int i = 0; i < columns_.size(); i++)
-	{
-		if ( columns_.at(i) == col )
-		{
-			found = true;
-			ct = i;
-		}
-	}
-	if (!found)
-		throw std::runtime_error ("Column " + col + "not found.");
+	// bool found(false);
+	// int ct;
+	// for (unsigned int i = 0; i < columns_.size(); i++)
+	// {
+	// 	if ( columns_.at(i) == col )
+	// 	{
+	// 		found = true;
+	// 		ct = i;
+	// 	}
+	// }
+	// if (!found)
+	// 	throw std::runtime_error ("Column " + col + "not found.");
 
 	//edm::LogInfo ("l1t::setting::getRowValue") << "Returning value " << convertVariable<varType>(row_.at(ct)) <<  " from table " << tableId_ << " and row " << this->getRowAsStr();
-	return convertVariable<varType>(row_.at(ct));
+	std::map<std::string,int>::const_iterator it = colDict_.find(col);
+    if( it == colDict_.end() )
+		throw std::runtime_error ("Column " + col + "not found in table " + tableId_);
+
+	return convertVariable<varType>(row_.at(it->second));
 }
 
 }
