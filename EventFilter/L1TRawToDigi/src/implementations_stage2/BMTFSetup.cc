@@ -25,9 +25,15 @@ namespace l1t {
                if (fed == 1376 || fed == 1377) {
                   
                   for (int i=1; i<=6; i++)
+                  {
                      res[{1376, i}] = {PackerFactory::get()->make("stage2::BMTFPackerOutput")};
+                     res[{1376, i}] = {PackerFactory::get()->make("stage2::BMTFPackerInputs")};
+                  }
                   for (int i=7; i<=12; i++)
-                     res[{1376, i}] = {PackerFactory::get()->make("stage2::BMTFPackerOutput")};
+                  {
+                     res[{1377, i}] = {PackerFactory::get()->make("stage2::BMTFPackerOutput")};
+                     res[{1377, i}] = {PackerFactory::get()->make("stage2::BMTFPackerInputs")};
+                  }
                }
 
                return res;
