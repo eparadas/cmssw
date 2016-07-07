@@ -2,14 +2,17 @@
 
 namespace l1t{
 
-trigSystem::trigSystem() : isConfigured_(false)
+trigSystem::trigSystem() : isConfigured_(false), printAllLogs_(false)
 {
-
+	logText_ = new std::string();
 }
 
 trigSystem::~trigSystem()
 {
+	if (printAllLogs_)
+		std::cout << "Printing all logs\n" << *logText_;
 
+	delete logText_;
 }
 
 void trigSystem::configureSystemFromFiles(const std::string& hwCfgFile, const std::string& topCfgFile, const std::string& key)
@@ -52,6 +55,7 @@ void trigSystem::addProcCrate(const std::string& processor, const std::string& c
 void trigSystem::addSetting(const std::string& type, const std::string& id, const std::string& value, const std::string& procRole, const std::string& delim)
 {
 	bool applyOnRole, foundRoleProc(false);
+	/*
 	for(auto it=procRole_.begin(); it!=procRole_.end(); ++it)
 	{
 		if (it->first.compare(procRole) == 0)
@@ -66,6 +70,17 @@ void trigSystem::addSetting(const std::string& type, const std::string& id, cons
 			foundRoleProc = true;
 			break;
 		}
+	}
+	*/
+	if (procRole_.find(procRole) != procRole_.end())
+	{
+		applyOnRole = false;
+		foundRoleProc = true;
+	}
+	else if (roleProcs_.find(procRole) != roleProcs_.end())
+	{
+		applyOnRole = true;
+		foundRoleProc = true;
 	}
 
 	if (!foundRoleProc)
@@ -74,7 +89,7 @@ void trigSystem::addSetting(const std::string& type, const std::string& id, cons
 	if (!applyOnRole)
 	{
 		if (!checkIdExistsAndSetSetting_(procSettings_[procRole], id, value, procRole))
-			procSettings_[procRole].push_back(setting(type, id, value, procRole, delim));
+			procSettings_[procRole].push_back(setting(type, id, value, procRole, logText_, delim));
 
 	}
 	else
@@ -93,10 +108,10 @@ void trigSystem::addSetting(const std::string& type, const std::string& id, cons
 					}					
 				}
 				if (!settingAlreadyExist)
-					procSettings_.at(*it).push_back(setting(type, id, value, procRole, delim));
+					procSettings_.at(*it).push_back(setting(type, id, value, procRole, logText_, delim));
 			}
 			else
-				procSettings_[*it].push_back(setting(type, id, value, procRole, delim));
+				procSettings_[*it].push_back(setting(type, id, value, procRole, logText_, delim));
 		}
 
 	}
@@ -105,6 +120,7 @@ void trigSystem::addSetting(const std::string& type, const std::string& id, cons
 void trigSystem::addSettingTable(const std::string& id, const std::string& columns, const std::string& types,  const std::vector<std::string>& rows, const std::string& procRole, const std::string& delim)
 {
 	bool applyOnRole, foundRoleProc(false);
+	/*
 	for(auto it=procRole_.begin(); it!=procRole_.end(); ++it)
 	{
 		if (it->first.compare(procRole) == 0)
@@ -120,14 +136,24 @@ void trigSystem::addSettingTable(const std::string& id, const std::string& colum
 			break;
 		}
 	}
-
+	*/
+	if (procRole_.find(procRole) != procRole_.end())
+	{
+		applyOnRole = false;
+		foundRoleProc = true;
+	}
+	else if (roleProcs_.find(procRole) != roleProcs_.end())
+	{
+		applyOnRole = true;
+		foundRoleProc = true;
+	}
 	if (!foundRoleProc)
 		throw std::runtime_error ("Processor or Role " + procRole + " was not found in the map");
 
 	if (!applyOnRole)
 	{
 		if (!checkIdExistsAndSetSetting_(procSettings_[procRole], id, columns, types, rows, procRole, delim))
-			procSettings_[procRole].push_back(setting(id, columns, types, rows, procRole, delim));
+			procSettings_[procRole].push_back(setting(id, columns, types, rows, procRole, logText_, delim));
 
 	}
 	else
@@ -146,10 +172,10 @@ void trigSystem::addSettingTable(const std::string& id, const std::string& colum
 					}					
 				}
 				if (!settingAlreadyExist)
-					procSettings_.at(*it).push_back(setting(id, columns, types, rows, procRole, delim));
+					procSettings_.at(*it).push_back(setting(id, columns, types, rows, procRole, logText_, delim));
 			}
 			else
-				procSettings_[*it].push_back(setting(id, columns, types, rows, procRole, delim));
+				procSettings_[*it].push_back(setting(id, columns, types, rows, procRole, logText_, delim));
 		}
 
 	}
@@ -196,10 +222,11 @@ bool trigSystem::checkIdExistsAndSetSetting_(std::vector<setting>& vec, const st
 			found = true;
 						
 			it->resetTableRows();
-			it->setTableTypes(types);
-			it->setTableColumns(columns);
+			//it->setRowTypes(types);
+			//it->setRowColumns(columns);
 			for(auto ir=rows.begin(); ir!=rows.end(); ++ir)
-				it->addTableRow(*ir);
+				it->addTableRow(*ir, str2VecStr_(types, delim), str2VecStr_(columns, delim));
+
 		}
 	}
 
@@ -209,6 +236,7 @@ bool trigSystem::checkIdExistsAndSetSetting_(std::vector<setting>& vec, const st
 void trigSystem::addMask(const std::string& id, const std::string& procRole)
 {
 	bool applyOnRole, foundRoleProc(false);
+	/*
 	for(auto it=procRole_.begin(); it!=procRole_.end(); ++it)
 	{
 		if (it->first.compare(procRole) == 0)
@@ -223,6 +251,17 @@ void trigSystem::addMask(const std::string& id, const std::string& procRole)
 			foundRoleProc = true;
 			break;
 		}
+	}
+	*/
+	if (procRole_.find(procRole) != procRole_.end())
+	{
+		applyOnRole = false;
+		foundRoleProc = true;
+	}
+	else if (roleProcs_.find(procRole) != roleProcs_.end())
+	{
+		applyOnRole = true;
+		foundRoleProc = true;
 	}
 
 	if (!foundRoleProc)
