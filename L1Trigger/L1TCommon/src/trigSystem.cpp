@@ -2,17 +2,18 @@
 
 namespace l1t{
 
-trigSystem::trigSystem() : isConfigured_(false), printAllLogs_(false)
+trigSystem::trigSystem() : isConfigured_(false)
 {
-	logText_ = new std::string();
+	logText_ = NULL;
 }
 
 trigSystem::~trigSystem()
 {
-	if (printAllLogs_)
+	if (logText_)
+	{
 		std::cout << "Printing all logs\n" << *logText_;
-
-	delete logText_;
+		delete logText_;
+	}
 }
 
 void trigSystem::configureSystemFromFiles(const std::string& hwCfgFile, const std::string& topCfgFile, const std::string& key)
@@ -55,23 +56,7 @@ void trigSystem::addProcCrate(const std::string& processor, const std::string& c
 void trigSystem::addSetting(const std::string& type, const std::string& id, const std::string& value, const std::string& procRole, const std::string& delim)
 {
 	bool applyOnRole, foundRoleProc(false);
-	/*
-	for(auto it=procRole_.begin(); it!=procRole_.end(); ++it)
-	{
-		if (it->first.compare(procRole) == 0)
-		{
-			applyOnRole = false;
-			foundRoleProc = true;
-			break;
-		}
-		else if (it->second.compare(procRole) == 0)
-		{
-			applyOnRole = true;
-			foundRoleProc = true;
-			break;
-		}
-	}
-	*/
+
 	if (procRole_.find(procRole) != procRole_.end())
 	{
 		applyOnRole = false;
@@ -120,23 +105,7 @@ void trigSystem::addSetting(const std::string& type, const std::string& id, cons
 void trigSystem::addSettingTable(const std::string& id, const std::string& columns, const std::string& types,  const std::vector<std::string>& rows, const std::string& procRole, const std::string& delim)
 {
 	bool applyOnRole, foundRoleProc(false);
-	/*
-	for(auto it=procRole_.begin(); it!=procRole_.end(); ++it)
-	{
-		if (it->first.compare(procRole) == 0)
-		{
-			applyOnRole = false;
-			foundRoleProc = true;
-			break;
-		}
-		else if (it->second.compare(procRole) == 0)
-		{
-			applyOnRole = true;
-			foundRoleProc = true;
-			break;
-		}
-	}
-	*/
+
 	if (procRole_.find(procRole) != procRole_.end())
 	{
 		applyOnRole = false;
@@ -236,23 +205,7 @@ bool trigSystem::checkIdExistsAndSetSetting_(std::vector<setting>& vec, const st
 void trigSystem::addMask(const std::string& id, const std::string& procRole)
 {
 	bool applyOnRole, foundRoleProc(false);
-	/*
-	for(auto it=procRole_.begin(); it!=procRole_.end(); ++it)
-	{
-		if (it->first.compare(procRole) == 0)
-		{
-			applyOnRole = false;
-			foundRoleProc = true;
-			break;
-		}
-		else if (it->second.compare(procRole) == 0)
-		{
-			applyOnRole = true;
-			foundRoleProc = true;
-			break;
-		}
-	}
-	*/
+
 	if (procRole_.find(procRole) != procRole_.end())
 	{
 		applyOnRole = false;

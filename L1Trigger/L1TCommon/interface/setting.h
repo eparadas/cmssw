@@ -57,8 +57,6 @@ class setting
 		void setLogStringVar(std::string* strVar) {logText_ = strVar;};
 		void addTableRow(const std::string& row, const std::vector<std::string>& types, const std::vector<std::string>& columns);
 		void resetTableRows() { tableRows_.clear();};
-		// void setTableTypes(const std::string& types);
-		// void setTableColumns(const std::string& cols);
 		std::string getProcRole() { return procRole_; };
 		std::string getValueAsStr() { return value_; };
 		std::string getType() { return type_; };
@@ -73,10 +71,7 @@ class setting
 	private:
 		std::string type_, id_, value_, procRole_, delim_;
 		std::vector<tableRow> tableRows_;
-		std::string* logText_;
-		//std::vector<std::string> tableTypes_;
-		//std::vector<std::string> tableColumns_;
-		
+		std::string* logText_;		
 };
 
 
@@ -92,10 +87,13 @@ template <typename varType> std::vector<varType> setting::getVector()
 	std::vector<varType> newVals;
 	for(auto it=vals.begin(); it!=vals.end(); it++)
 		newVals.push_back(convertVariable<varType>(*it));
-	//edm::LogInfo ("l1t::setting::getVector") << "Returning vector with values " << this->getValueAsStr();
-	std::ostringstream tempStr;
-	tempStr << "l1t::setting::getVector\tReturning vector with values " << this->getValueAsStr() << std::endl;
-	logText_->append(tempStr.str());
+
+	if ( logText_ )
+	{
+		std::ostringstream tempStr;
+		tempStr << "l1t::setting::getVector\tReturning vector with values " << this->getValueAsStr() << " from parameter with id: " << this->getId() << std::endl;
+		logText_->append(tempStr.str());
+	}
 	return newVals;
 }
 
@@ -105,37 +103,27 @@ template <class varType> varType setting::getValue()
 	if ( type_.find("vector") != std::string::npos )
 		throw std::runtime_error("The registered type: " + type_ + " is vector so you need to call the getVector method");
 	
-	//edm::LogInfo ("l1t::setting::getValue") << "Returning value " << this->getValueAsStr();
-	std::ostringstream tempStr;
-	tempStr << "l1t::setting::getValue\tReturning value " << this->getValueAsStr() << std::endl;
-	logText_->append(tempStr.str());
+	if ( logText_ )
+	{
+		std::ostringstream tempStr;
+		tempStr << "l1t::setting::getValue\tReturning value " << this->getValueAsStr() << " from parameter with id: " << this->getId() << std::endl;
+		logText_->append(tempStr.str());
+	}
 	return convertVariable<varType>(value_);
 }
 
 template <class varType> varType tableRow::getRowValue(const std::string& col)
 {
-	
-	// bool found(false);
-	// int ct;
-	// for (unsigned int i = 0; i < columns_.size(); i++)
-	// {
-	// 	if ( columns_.at(i) == col )
-	// 	{
-	// 		found = true;
-	// 		ct = i;
-	// 	}
-	// }
-	// if (!found)
-	// 	throw std::runtime_error ("Column " + col + "not found.");
-
-	//edm::LogInfo ("l1t::setting::getRowValue") << "Returning value " << convertVariable<varType>(row_.at(ct)) <<  " from table " << tableId_ << " and row " << this->getRowAsStr();
 	std::map<std::string,int>::const_iterator it = colDict_->find(col);
     if( it == colDict_->end() )
 		throw std::runtime_error ("Column " + col + "not found in table " + tableId_);
 
-	std::ostringstream tempStr;
-	tempStr << "l1t::setting::getRowValue\tReturning value " << convertVariable<varType>(row_->at(it->second)) <<  " from table " << tableId_ << " and row " << this->getRowAsStr() << std::endl;
-	logText_->append(tempStr.str());
+	if ( logText_ )
+	{
+		std::ostringstream tempStr;
+		tempStr << "l1t::setting::getRowValue\tReturning value " << convertVariable<varType>(row_->at(it->second)) <<  " from table " << tableId_ << " and row " << this->getRowAsStr() << std::endl;
+		logText_->append(tempStr.str());
+	}
 	return convertVariable<varType>(row_->at(it->second));
 }
 
