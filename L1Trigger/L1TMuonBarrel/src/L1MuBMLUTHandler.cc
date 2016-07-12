@@ -50,7 +50,7 @@ using namespace std;
 // Constructors --
 //----------------
 
-L1MuBMLUTHandler::L1MuBMLUTHandler(const L1TMuonBarrelParams &l1params) {
+L1MuBMLUTHandler::L1MuBMLUTHandler(const L1TMuonBarrelParamsHelper &l1params) {
     l1tbmparams = &l1params;
 }
 

@@ -35,6 +35,7 @@
 // Collaborating Class Declarations --
 //------------------------------------
 #include "L1Trigger/L1TMuonBarrel/interface/L1MuBMLUTHandler.h"
+ #include "L1Trigger/L1TMuonBarrel/interface/L1TMuonBarrelParamsHelper.h"
 #include "CondFormats/L1TObjects/interface/L1TMuonBarrelParams.h"
 #include "CondFormats/DataRecord/interface/L1TMuonBarrelParamsRcd.h"
 

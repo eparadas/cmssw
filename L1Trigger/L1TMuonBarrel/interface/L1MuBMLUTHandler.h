@@ -5,7 +5,8 @@
 // C++ Headers --
 //---------------
 
-#include "CondFormats/L1TObjects/interface/L1TMuonBarrelParams.h"
+//#include "CondFormats/L1TObjects/interface/L1TMuonBarrelParams.h"
+#include "L1Trigger/L1TMuonBarrel/interface/L1TMuonBarrelParamsHelper.h"
 
 #include <vector>
 #include <map>
@@ -29,7 +30,8 @@ class L1MuBMLUTHandler {
 
   public:
     /// constructor
-    L1MuBMLUTHandler(const L1TMuonBarrelParams &l1params);
+    //L1MuBMLUTHandler(const L1TMuonBarrelParams &l1params);
+    L1MuBMLUTHandler(const L1TMuonBarrelParamsHelper& l1params);
 
     /// destructor
     virtual ~L1MuBMLUTHandler();
@@ -63,7 +65,8 @@ class L1MuBMLUTHandler {
 
 
   private:
-    const L1TMuonBarrelParams* l1tbmparams;
+    //const L1TMuonBarrelParams* l1tbmparams;
+    const L1TMuonBarrelParamsHelper* l1tbmparams;
 
   public:
 
