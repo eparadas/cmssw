@@ -1,14 +1,14 @@
-#ifndef L1TMuonBarrelParamsAllPublic_h
-#define L1TMuonBarrelParamsAllPublic_h
+#ifndef L1TMuonBarrelParamsAccessible_h
+#define L1TMuonBarrelParamsAccessible_h
 
 #include "CondFormats/L1TObjects/interface/L1TMuonBarrelParams.h"
 
 
-class L1TMuonBarrelParamsAllPublic : public L1TMuonBarrelParams 
+class L1TMuonBarrelParamsAccessible : public L1TMuonBarrelParams 
 {
 	public:
-		L1TMuonBarrelParamsAllPublic() {};
-		~L1TMuonBarrelParamsAllPublic() {};
+		L1TMuonBarrelParamsAccessible() {};
+		~L1TMuonBarrelParamsAccessible() {};
 
 		std::string AssLUTPath() const  { return pnodes_[CONFIG].sparams_.size() > 0 ? pnodes_[CONFIG].sparams_[0] : ""; };
 		void setAssLUTPath        (std::string path) { pnodes_[CONFIG].sparams_.push_back(path); };
@@ -70,8 +70,8 @@ class L1TMuonBarrelParamsAllPublic : public L1TMuonBarrelParams
 		void setFwVersion(unsigned fwVersion) { fwVersion_ = fwVersion; };
 };
 
-const L1TMuonBarrelParamsAllPublic& cast_to_L1TMuonBarrelParamsAllPublic(const L1TMuonBarrelParams& a);
-const L1TMuonBarrelParams& cast_to_L1TMuonBarrelParams(const L1TMuonBarrelParamsAllPublic& a);
+const L1TMuonBarrelParamsAccessible& cast_to_L1TMuonBarrelParamsAccessible(const L1TMuonBarrelParams& a);
+const L1TMuonBarrelParams& cast_to_L1TMuonBarrelParams(const L1TMuonBarrelParamsAccessible& a);
 
 
 #endif

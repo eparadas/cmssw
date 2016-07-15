@@ -24,7 +24,7 @@
 #include "L1Trigger/L1TCommon/interface/setting.h"
 #include "L1Trigger/L1TCommon/interface/mask.h"
 
-#include "L1Trigger/L1TMuonBarrel/interface/L1TMuonBarrelParamsAllPublic.h"
+#include "L1Trigger/L1TMuonBarrel/interface/L1TMuonBarrelParamsAccessible.h"
 
 
 typedef std::map<short, short, std::less<short> > LUT;
@@ -45,7 +45,7 @@ public:
 	
 
 private:
-	L1TMuonBarrelParamsAllPublic m_params_helper;
+	L1TMuonBarrelParamsAccessible m_params_helper;
 	l1t::trigSystem m_trgSys;
 
 	int load_pt(std::vector<LUT>& , std::vector<int>&, unsigned short int, std::string);
