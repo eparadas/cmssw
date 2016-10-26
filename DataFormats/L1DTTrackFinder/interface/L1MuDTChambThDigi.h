@@ -55,9 +55,13 @@ class L1MuDTChambThDigi {
   int scNum()       const;
   int stNum()       const;
 
+  bool qualSet() { return qualitySet; };
+
   int code(const int i) const;
   int position(const int i) const;
   int quality(const int i) const;
+ 
+  void setQuality(int *uqual);
 
  private:
 
@@ -65,6 +69,8 @@ class L1MuDTChambThDigi {
   int wheel;
   int sector;
   int station;
+
+  bool qualitySet;
 
   myint8 m_outPos[7];
   myint8 m_outQual[7];

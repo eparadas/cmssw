@@ -44,6 +44,7 @@ L1MuDTChambThDigi::L1MuDTChambThDigi() {
     m_outPos[i] = 0;
     m_outQual[i] = 0;
   }
+  qualitySet = false;
 }
 
 L1MuDTChambThDigi::L1MuDTChambThDigi( int ubx, int uwh, int usc, int ust,
@@ -58,6 +59,8 @@ L1MuDTChambThDigi::L1MuDTChambThDigi( int ubx, int uwh, int usc, int ust,
     m_outPos[i] = upos[i];
     m_outQual[i] = uqual[i];
   }
+
+  qualitySet = true;
 }
 
 L1MuDTChambThDigi::L1MuDTChambThDigi( int ubx, int uwh, int usc, int ust,
@@ -72,6 +75,16 @@ L1MuDTChambThDigi::L1MuDTChambThDigi( int ubx, int uwh, int usc, int ust,
     m_outPos[i] = upos[i];
     m_outQual[i] = 0;
   }
+
+  qualitySet = false;
+}
+
+void L1MuDTChambThDigi::setQuality(int *uqual)
+{
+  for(int i=0; i<7; i++)
+	m_outQual[i] = uqual[i];
+
+  qualitySet = true;
 }
 
 //--------------

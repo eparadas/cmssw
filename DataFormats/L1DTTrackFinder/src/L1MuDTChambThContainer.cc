@@ -52,6 +52,11 @@ L1MuDTChambThContainer::The_Container const* L1MuDTChambThContainer::getContaine
   return &theSegments;
 }
 
+L1MuDTChambThContainer::The_Container* L1MuDTChambThContainer::getEditableContainer()
+{
+	return &theSegments;
+}
+
 bool L1MuDTChambThContainer::bxEmpty(int step) const {
 
   bool empty = true;

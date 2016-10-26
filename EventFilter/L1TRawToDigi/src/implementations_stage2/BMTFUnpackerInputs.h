@@ -7,7 +7,7 @@ namespace l1t{
 	namespace stage2{
 		struct qualityHits
 		{
-			int linkNo;
+			int linkNo, secNo, wheel;
 			int hits[3][7];
 		};
 		class BMTFUnpackerInputsOldQual : public Unpacker
@@ -15,8 +15,8 @@ namespace l1t{
 			public:
 				virtual bool unpack(const Block& block, UnpackerCollections *coll) override;
 			private:
-				qualityHits linkAndQual_;
-				//std::map<int, qualityHits> linkAndQual_;
+				//qualityHits linkAndQual_;
+				std::map<std::string, qualityHits> linkAndQual_;
 		};
 
 		class BMTFUnpackerInputsNewQual : public Unpacker
@@ -24,8 +24,8 @@ namespace l1t{
 			public:
 				virtual bool unpack(const Block& block, UnpackerCollections *coll) override;
 			private:
-				qualityHits linkAndQual_;
-				//std::map<int, qualityHits> linkAndQual_;
+				//qualityHits linkAndQual_;
+				std::map<std::string, qualityHits> linkAndQual_;
 		};
 
 	}

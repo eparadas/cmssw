@@ -34,7 +34,7 @@ namespace l1t
 				return (value == 0);
 		}
 
-		bool unpacking(const Block& block, UnpackerCollections *coll, qualityHits& linkAndQual_, const bool& isNewFw)
+		bool unpacking(const Block& block, UnpackerCollections *coll, std::map<std::string, qualityHits>& linkAndQual_, const bool& isNewFw)
 		{
 
 			unsigned int ownLinks[] = {4,5,12,13,20,21,22,23,28,29};
@@ -134,25 +134,52 @@ namespace l1t
 					for (int i = 0; i < 3; i++)
 					{
 						if (zeroFlag[i])
-							theData.push_back(L1MuDTChambThDigi( ibx, wheel, sector, i+1, etaHits[i], linkAndQual_.hits[i]) );
+							theData.push_back(L1MuDTChambThDigi( ibx, wheel, sector, i+1, etaHits[i] ));
+							//theData.push_back(L1MuDTChambThDigi( ibx, wheel, sector, i+1, etaHits[i], linkAndQual_.hits[i]) );
 					}
 
 				}
 				else
 				{
-					/*
+					
 					qualityHits temp;
-					temp.linkNo = blockId/2;
+					temp.linkNo = ibx;
+					temp.secNo = sector;
+					temp.wheel = wheel;
 					std::copy(&etaHits[0][0], &etaHits[0][0]+3*7,&temp.hits[0][0]);
-					linkAndQual_[blockId/2] = temp;	
-					*/
+					std::ostringstream ostr;
+					ostr << temp.linkNo << "_" << temp.secNo << "_" << temp.wheel;
+					linkAndQual_[ostr.str()] = temp;	
+					/*
 					linkAndQual_.linkNo = blockId/2;
                                         std::copy(&etaHits[0][0], &etaHits[0][0]+3*7,&linkAndQual_.hits[0][0]);
+					*/
 				}
 
 			}//ibx
+			
+			if ( linkAndQual_.size() == 5 && (blockId/2)%2 == 1 )
+			{
+				//std::cout << "Starting with eta size: " << theData.size() << std::endl;
+				//for ( auto tt = linkAndQual_.begin(); tt != linkAndQual_.end(); ++tt)
+				//	std::cout << "linkAndQual_ contains: " <<  tt->first << std::endl;
+
+				for(auto eta = theData.begin(); eta != theData.end(); ++eta)
+				{
+					if ( !eta->qualSet() )
+					{
+						std::ostringstream ostr;
+						ostr << eta->bxNum() << "_" << eta->scNum() << "_" << eta->whNum();		
+				//		std::cout << "theData contains: " << ostr.str() << "\t" << eta->stNum() << std::endl;
+						eta->setQuality(linkAndQual_.at(ostr.str()).hits[eta->stNum()-1]);
+					}//qualSet
+				}
+				linkAndQual_.clear();
+			}
+			
 			resThe->setContainer(theData);
 			resPhi->setContainer(phiData);
+			//std::cout << "The eta size is: " << theData.size() << " and linkAndQual_ size is: " << linkAndQual_.size() << std::endl;
 
 			return true;
 			

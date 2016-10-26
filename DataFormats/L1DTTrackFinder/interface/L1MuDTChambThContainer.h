@@ -47,6 +47,8 @@ class L1MuDTChambThContainer {
   void setContainer(const The_Container& inputSegments);
 
   The_Container const* getContainer() const;
+  
+  The_Container* getEditableContainer();
 
   bool bxEmpty(int step) const;
 
